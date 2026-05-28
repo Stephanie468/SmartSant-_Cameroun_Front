@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+  --radius: 0.875rem;
+  --background: oklch(0.984 0.003 247);
+  --foreground: oklch(0.21 0.034 264);
+  --surface: oklch(1 0 0);
+  --surface-soft: oklch(0.97 0.005 247);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.21 0.034 264);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.21 0.034 264);
+  --primary: oklch(0.62 0.105 188);
+  --primary-foreground: oklch(0.99 0.005 180);
+  --secondary: oklch(0.5 0.13 240);
+  --secondary-foreground: oklch(0.99 0.005 240);
+  --muted: oklch(0.96 0.006 247);
+  --muted-foreground: oklch(0.52 0.018 257);
+  --accent: oklch(0.95 0.025 188);
+  --accent-foreground: oklch(0.35 0.08 188);
+  --destructive: oklch(0.62 0.21 25);
+  --destructive-foreground: oklch(0.99 0.005 25);
+  --success: oklch(0.66 0.15 155);
+  --success-foreground: oklch(0.99 0.005 155);
+  --warning: oklch(0.78 0.14 80);
+  --warning-foreground: oklch(0.3 0.06 80);
+  --whatsapp: oklch(0.66 0.18 145);
+  --border: oklch(0.92 0.008 255);
+  --input: oklch(0.92 0.008 255);
+  --ring: oklch(0.62 0.105 188);
+}
+
+.dark {
+  --background: oklch(0.16 0.02 247);
+  --foreground: oklch(0.98 0.003 247);
+  --surface: oklch(0.21 0.025 247);
+  --surface-soft: oklch(0.19 0.022 247);
+  --card: oklch(0.21 0.025 247);
+  --card-foreground: oklch(0.98 0.003 247);
+  --popover: oklch(0.21 0.025 247);
+  --popover-foreground: oklch(0.98 0.003 247);
+  --primary: oklch(0.72 0.11 188);
+  --primary-foreground: oklch(0.15 0.03 188);
+  --secondary: oklch(0.6 0.13 240);
+  --secondary-foreground: oklch(0.99 0.005 240);
+  --muted: oklch(0.26 0.022 247);
+  --muted-foreground: oklch(0.7 0.018 257);
+  --accent: oklch(0.3 0.05 188);
+  --accent-foreground: oklch(0.9 0.06 188);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+    box-sizing: border-box;
+  }
+  html {
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-feature-settings: "ss01", "cv11";
+    margin: 0;
+    padding: 0;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
+}
