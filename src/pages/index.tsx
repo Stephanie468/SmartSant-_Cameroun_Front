@@ -75,12 +75,6 @@ function HomePage() {
                 </div>
               ))}
             </div>
-            <Link
-              to="/statistiques"
-              className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-primary"
-            >
-              Tableau de bord épidémiologique <ArrowRight className="size-4" />
-            </Link>
           </div>
         </section>
 

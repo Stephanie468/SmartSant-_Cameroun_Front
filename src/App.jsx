@@ -16,7 +16,7 @@ import Medecin from "./pages/medecin"
 import MedecinPatients from "./pages/medecin.patients"
 import MedecinPlanning from "./pages/medecin.planning"
 import MedecinTeleconsultation from "./pages/medecin.teleconsultation"
-
+import AttenteValidation from "./pages/AttenteValidation" 
 // Pages admin
 import Statistiques from "./pages/statistiques"
 
@@ -40,8 +40,10 @@ function App() {
         <Route path="/medecin/patients" element={<MedecinPatients />} />
         <Route path="/medecin/planning" element={<MedecinPlanning />} />
         <Route path="/medecin/teleconsultation" element={<MedecinTeleconsultation />} />
+        <Route path="/attente-validation" element={<AttenteValidation />} />
 
         <Route path="/statistiques" element={<Statistiques />} />
+        
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
