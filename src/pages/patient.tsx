@@ -12,11 +12,14 @@ import {
   Loader2,
   AlertCircle
 } from "lucide-react";
+import { useState } from "react"
+import { Copy, Check, X } from "lucide-react"
 import { SiteNav } from "@/components/SiteNav";
 import { PanelCard } from "@/components/Card";
 import mapDouala from "@/assets/map-douala.png";
 import { usePatientDashboard } from "@/hooks/usePatient";
-import type { PatientDashboardData } from "../types/patient";
+import { ModalDiagnostic } from "@/components/ModalDiagnostic";
+
 
 // Helper pour parser le contenu de l'ordonnance
 function parseContenuOrdonnance(contenu: string) {
@@ -42,7 +45,7 @@ function parseContenuOrdonnance(contenu: string) {
 
 function PatientDashboard() {
   const { data, chargement, erreur } = usePatientDashboard()
-
+  const [modalOuvert, setModalOuvert] = useState(false)
   if (chargement) {
     return (
       <div className="min-h-screen bg-background md:pl-64 flex items-center justify-center">
@@ -82,6 +85,7 @@ function PatientDashboard() {
 
   return (
     <div className="min-h-screen bg-background md:pl-64">
+      {modalOuvert && <ModalDiagnostic onClose={() => setModalOuvert(false)} />}
       <SiteNav variant="patient" />
       <main className="mx-auto max-w-7xl px-6 py-10">
         <div className="mb-8 flex items-end justify-between gap-4">
@@ -100,12 +104,12 @@ function PatientDashboard() {
               )}
             </p>
           </div>
-          <a
-            href="https://wa.me/237683641781"
-            className="hidden items-center gap-2 rounded-xl bg-whatsapp px-4 py-2.5 text-sm font-semibold text-white shadow-card transition-transform hover:scale-[1.02] md:inline-flex"
-          >
-            <MessageCircle className="size-4" /> Nouveau diagnostic IA
-          </a>
+          <button
+              onClick={() => setModalOuvert(true)}
+              className="hidden items-center gap-2 rounded-xl bg-whatsapp px-4 py-2.5 text-sm font-semibold text-white shadow-card transition-transform hover:scale-[1.02] md:inline-flex"
+            >
+              <MessageCircle className="size-4" /> Nouveau diagnostic IA
+          </button>
         </div>
 
         {/* Vitals row */}
