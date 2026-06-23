@@ -1,34 +1,14 @@
+import { useState } from "react";
 import { SiteNav } from "@/components/SiteNav";
 import { PanelCard, SectionHeader } from "@/components/Card";
 import { MapPin, Phone, Clock, Search, Loader2, AlertCircle } from "lucide-react";
 import mapDouala from "@/assets/map-douala.png";
-import { useState, useEffect } from "react";
-import { patientApi } from "../api";
+import { useStructures } from "@/hooks/useStructures";
 import type { FormationSanitaire } from "../types/patient";
 
 function CentresPage() {
-  const [structures, setStructures] = useState<FormationSanitaire[]>([]);
+  const { structures, chargement, erreur } = useStructures()
   const [recherche, setRecherche] = useState("");
-  const [chargement, setChargement] = useState(true);
-  const [erreur, setErreur] = useState("");
-
-  useEffect(() => {
-    async function chargerStructures() {
-      try {
-        const { data, erreur: err } = await patientApi.getStructures();
-        if (err) {
-          setErreur(err);
-        } else if (data) {
-          setStructures(data);
-        }
-      } catch (e) {
-        setErreur("Erreur lors du chargement des formations sanitaires.");
-      } finally {
-        setChargement(false);
-      }
-    }
-    chargerStructures();
-  }, []);
 
   const structuresFiltrees = structures.filter(s => {
     const term = recherche.toLowerCase();

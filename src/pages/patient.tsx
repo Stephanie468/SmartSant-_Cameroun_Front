@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
 import {
   Calendar,
   Pill,
@@ -16,7 +15,7 @@ import {
 import { SiteNav } from "@/components/SiteNav";
 import { PanelCard } from "@/components/Card";
 import mapDouala from "@/assets/map-douala.png";
-import { patientApi } from "../api";
+import { usePatientDashboard } from "@/hooks/usePatient";
 import type { PatientDashboardData } from "../types/patient";
 
 // Helper pour parser le contenu de l'ordonnance
@@ -42,27 +41,7 @@ function parseContenuOrdonnance(contenu: string) {
 }
 
 function PatientDashboard() {
-  const [data, setData] = useState<PatientDashboardData | null>(null);
-  const [chargement, setChargement] = useState(true);
-  const [erreur, setErreur] = useState('');
-
-  useEffect(() => {
-    async function chargerDashboard() {
-      try {
-        const { data: res, erreur: err } = await patientApi.getDashboard();
-        if (err) {
-          setErreur(err);
-        } else {
-          setData(res);
-        }
-      } catch (e) {
-        setErreur("Impossible de charger les données du tableau de bord.");
-      } finally {
-        setChargement(false);
-      }
-    }
-    chargerDashboard();
-  }, []);
+  const { data, chargement, erreur } = usePatientDashboard()
 
   if (chargement) {
     return (

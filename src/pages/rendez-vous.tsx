@@ -1,9 +1,9 @@
 import { SiteNav } from "@/components/SiteNav";
 import { PanelCard, SectionHeader } from "@/components/Card";
 import { Calendar, Clock, MapPin, Video, Plus, Loader2, AlertCircle, X } from "lucide-react";
-import { useState, useEffect } from "react";
-import { patientApi } from "../api";
+import { useState } from "react";
 import { useRendezVous } from "../hooks/useRendezVous"
+import type { Creneau } from "../types/patient"
 
 // Traducteur jour de la semaine
 const JOURS: Record<string, string> = {
@@ -14,6 +14,16 @@ const JOURS: Record<string, string> = {
   VENDREDI: "Ven",
   SAMEDI: "Sam",
   DIMANCHE: "Dim"
+};
+
+const JOURS_SEMAINE: Record<string, number> = {
+  DIMANCHE: 0,
+  LUNDI: 1,
+  MARDI: 2,
+  MERCREDI: 3,
+  JEUDI: 4,
+  VENDREDI: 5,
+  SAMEDI: 6,
 };
 
 function RdvPage() {
@@ -27,17 +37,44 @@ function RdvPage() {
     creerRdv
   } = useRendezVous()
 
-  
+  const [modalOpen, setModalOpen] = useState(false)
+  const [medecinSelectionne, setMedecinSelectionne] = useState("")
+  const [creneauSelectionne, setCreneauSelectionne] = useState("")
+  const [motif, setMotif] = useState("")
+
+  const creneauxDisponibles = medecins.find(m => m.id === medecinSelectionne)?.creneaux || [];
+
+  function getDateForCreneau(creneau: Creneau) {
+    const now = new Date()
+    const [hour, minute] = creneau.heureDebut.split(":").map(Number)
+    const targetDay = JOURS_SEMAINE[creneau.jourSemaine] ?? now.getDay()
+    const date = new Date(now)
+    date.setHours(hour, minute, 0, 0)
+
+    const currentDay = now.getDay()
+    let diff = targetDay - currentDay
+    if (diff < 0 || (diff === 0 && date <= now)) {
+      diff += 7
+    }
+    date.setDate(date.getDate() + diff)
+    return date
+  }
 
   const handleBook = async (e: React.FormEvent) => {
     e.preventDefault()
-    // ... calcul de dateRdv identique ...
+    const creneau = creneauxDisponibles.find(c => c.id === creneauSelectionne)
+    if (!creneau || !medecinSelectionne) {
+      return
+    }
+
+    const dateRdv = getDateForCreneau(creneau)
     const ok = await creerRdv({
       medecinId: medecinSelectionne,
       creneauId: creneauSelectionne,
       dateHeure: dateRdv.toISOString(),
-      motif
+      motif: motif || undefined
     })
+
     if (ok) {
       setModalOpen(false)
       setMedecinSelectionne("")
@@ -45,10 +82,6 @@ function RdvPage() {
       setMotif("")
     }
   }
-}
-
-  // Liste des créneaux pour le médecin choisi
-  const creneauxDisponibles = medecins.find(m => m.id === medecinSelectionne)?.creneaux || [];
 
   // Compter le nombre de créneaux dispos par jour de la semaine (pour affichage stats)
   const creneauxParJour: Record<string, number> = {

@@ -1,32 +1,11 @@
-import { useState, useEffect } from "react";
 import { SiteNav } from "@/components/SiteNav";
 import { PanelCard, SectionHeader } from "@/components/Card";
 import { FileText, Filter, Loader2, AlertCircle } from "lucide-react";
-import { patientApi } from "../api";
+import { useConsultations } from "@/hooks/useConsultations";
 import type { ConsultationIA } from "../types/patient";
 
 function HistoriquePage() {
-  const [consultations, setConsultations] = useState<ConsultationIA[]>([]);
-  const [chargement, setChargement] = useState(true);
-  const [erreur, setErreur] = useState('');
-
-  useEffect(() => {
-    async function chargerConsultations() {
-      try {
-        const { data, erreur: err } = await patientApi.getConsultations();
-        if (err) {
-          setErreur(err);
-        } else if (data) {
-          setConsultations(data);
-        }
-      } catch (e) {
-        setErreur("Erreur lors de la récupération de votre historique.");
-      } finally {
-        setChargement(false);
-      }
-    }
-    chargerConsultations();
-  }, []);
+  const { consultations, chargement, erreur } = useConsultations()
 
   return (
     <div className="min-h-screen bg-background md:pl-64">

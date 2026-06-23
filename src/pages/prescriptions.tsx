@@ -1,9 +1,7 @@
-import { useState, useEffect } from "react";
 import { SiteNav } from "@/components/SiteNav";
 import { PanelCard, SectionHeader } from "@/components/Card";
 import { Pill, Download, Calendar, Loader2, AlertCircle } from "lucide-react";
-import { patientApi } from "../api";
-import type { Ordonnance } from "../types/patient";
+import { useOrdonnances } from "@/hooks/useOrdonnances";
 
 // Helper pour parser le contenu formaté de l'ordonnance
 function parseContenuOrdonnance(contenu: string) {
@@ -28,27 +26,7 @@ function parseContenuOrdonnance(contenu: string) {
 }
 
 function PrescriptionsPage() {
-  const [ordonnances, setOrdonnances] = useState<Ordonnance[]>([]);
-  const [chargement, setChargement] = useState(true);
-  const [erreur, setErreur] = useState('');
-
-  useEffect(() => {
-    async function chargerOrdonnances() {
-      try {
-        const { data, erreur: err } = await patientApi.getOrdonnances();
-        if (err) {
-          setErreur(err);
-        } else if (data) {
-          setOrdonnances(data);
-        }
-      } catch (e) {
-        setErreur("Erreur lors du chargement de vos prescriptions.");
-      } finally {
-        setChargement(false);
-      }
-    }
-    chargerOrdonnances();
-  }, []);
+  const { ordonnances, chargement, erreur } = useOrdonnances()
 
   return (
     <div className="min-h-screen bg-background md:pl-64">
