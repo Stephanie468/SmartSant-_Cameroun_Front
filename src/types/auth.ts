@@ -34,6 +34,7 @@ export interface FormulairePatient {
   telephone: string
   dateNaissance: string
   ville: string
+  motDePasse: string
   consentement: boolean
 }
 

@@ -22,6 +22,7 @@ export function useInscription() {
       telephone,
       dateNaissance: data.dateNaissance,
       ville: data.ville,
+      motDePasse: data.motDePasse,
     })
 
     setChargement(false)

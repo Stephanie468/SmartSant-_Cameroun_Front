@@ -25,7 +25,7 @@ function SignupPage() {
   // ── État Patient ─────────────────────────────────────────────
   const [patient, setPatient] = useState<FormulairePatient>({
     nom: "", prenom: "", telephone: "",
-    dateNaissance: "", ville: "Douala", consentement: false
+    dateNaissance: "", ville: "Douala", motDePasse: "", consentement: false
   })
 
   // ── État Médecin ─────────────────────────────────────────────
@@ -113,6 +113,7 @@ function SignupPage() {
     if (patient.nom.trim().length < 2) return setErreur("Veuillez renseigner votre nom complet.")
     if (!/^\+?\d{8,15}$/.test(tel)) return setErreur("Numéro WhatsApp invalide.")
     if (!patient.dateNaissance) return setErreur("Date de naissance requise.")
+    if (patient.motDePasse.length < 8) return setErreur("Mot de passe trop court (8 caractères minimum).")
     if (!patient.consentement) return setErreur("Vous devez accepter la politique de confidentialité.")
     soumettrePatient(patient)
   }
@@ -205,6 +206,11 @@ function SignupPage() {
                   </select>
                 </Field>
               </div>
+              <Field icon={Lock} label="Mot de passe">
+                <input type="password" value={patient.motDePasse}
+                  onChange={e => updP("motDePasse", e.target.value)}
+                  placeholder="Minimum 8 caractères" className="w-full bg-transparent outline-none" />
+              </Field>
               <Consent checked={patient.consentement} onChange={v => updP("consentement", v)}
                 label={<>J'accepte que SmartSanté Cameroun traite mes données de santé conformément à la{" "}
                   <a href="#" className="font-semibold text-primary hover:underline">politique de confidentialité</a>.</>} />
