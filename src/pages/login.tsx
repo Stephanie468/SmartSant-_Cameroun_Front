@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import { useState } from "react"
 import {
   Stethoscope, MessageCircle, ArrowRight,
-  Phone, User, Mail, Lock, Loader2
+  Phone, User, Mail, Lock, Eye, EyeOff, Loader2
 } from "lucide-react"
 import { useConnexion } from "../hooks/useConnexion"
 import type {
@@ -19,12 +19,14 @@ function LoginPage() {
     telephone: "",
     motDePasse: "",
   })
+  const [voirMdpPatient, setVoirMdpPatient] = useState(false)
 
   // ── État formulaire médecin ───────────────────────────────
   const [medecin, setMedecin] = useState<FormulaireConnexionMedecin>({
     email: "",
     motDePasse: "",
   })
+  const [voirMdpMedecin, setVoirMdpMedecin] = useState(false)
 
   const switchTab = (t: "patient" | "medecin") => {
     setTab(t)
@@ -159,14 +161,23 @@ function LoginPage() {
                   />
                 </Field>
                 <Field icon={Lock} label="Mot de passe">
-                  <input
-                    type="password"
-                    value={patient.motDePasse}
-                    onChange={e => setPatient(f => ({ ...f, motDePasse: e.target.value }))}
-                    placeholder="••••••••"
-                    disabled={chargement}
-                    className="w-full bg-transparent outline-none disabled:opacity-50"
-                  />
+                  <div className="flex w-full items-center gap-2 rounded-xl bg-card px-1 py-1">
+                    <input
+                      type={voirMdpPatient ? "text" : "password"}
+                      value={patient.motDePasse}
+                      onChange={e => setPatient(f => ({ ...f, motDePasse: e.target.value }))}
+                      placeholder="••••••••"
+                      disabled={chargement}
+                      className="flex-1 bg-transparent outline-none disabled:opacity-50"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setVoirMdpPatient(v => !v)}
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      {voirMdpPatient ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                    </button>
+                  </div>
                 </Field>
                 <p className="text-xs text-muted-foreground">
                   Entrez votre numéro WhatsApp et votre mot de passe pour accéder à votre compte.
@@ -203,14 +214,23 @@ function LoginPage() {
                   />
                 </Field>
                 <Field icon={Lock} label="Mot de passe">
-                  <input
-                    type="password"
-                    value={medecin.motDePasse}
-                    onChange={e => setMedecin(f => ({ ...f, motDePasse: e.target.value }))}
-                    placeholder="••••••••"
-                    disabled={chargement}
-                    className="w-full bg-transparent outline-none disabled:opacity-50"
-                  />
+                  <div className="flex w-full items-center gap-2 rounded-xl bg-card px-1 py-1">
+                    <input
+                      type={voirMdpMedecin ? "text" : "password"}
+                      value={medecin.motDePasse}
+                      onChange={e => setMedecin(f => ({ ...f, motDePasse: e.target.value }))}
+                      placeholder="••••••••"
+                      disabled={chargement}
+                      className="flex-1 bg-transparent outline-none disabled:opacity-50"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setVoirMdpMedecin(v => !v)}
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      {voirMdpMedecin ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                    </button>
+                  </div>
                 </Field>
 
                 {/* Message informatif sur le statut EN_ATTENTE */}

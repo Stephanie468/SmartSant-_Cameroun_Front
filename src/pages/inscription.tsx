@@ -3,7 +3,7 @@ import { useRef, useState } from "react"
 import {
   Stethoscope, User, Phone, Calendar,
   MapPin, ArrowRight, ShieldCheck,
-  Mail, Lock, Briefcase, Building2,
+  Mail, Lock, Eye, EyeOff, Briefcase, Building2,
   Loader2, Award, Upload, CheckCircle2, X
 } from "lucide-react"
 import { useInscription } from "../hooks/useInscription"
@@ -27,6 +27,7 @@ function SignupPage() {
     nom: "", prenom: "", telephone: "",
     dateNaissance: "", ville: "Douala", motDePasse: "", consentement: false
   })
+  const [voirMdpPatient, setVoirMdpPatient] = useState(false)
 
   // ── État Médecin ─────────────────────────────────────────────
   const [medecin, setMedecin] = useState<FormulaireMedecin>({
@@ -35,6 +36,7 @@ function SignupPage() {
     numeroOrdre: "", carteProfessionnelleUrl: "",
     hopital: "", consentement: false
   })
+  const [voirMdpMedecin, setVoirMdpMedecin] = useState(false)
 
   // ── État upload fichier ──────────────────────────────────────
   const [uploading, setUploading] = useState(false)
@@ -207,9 +209,22 @@ function SignupPage() {
                 </Field>
               </div>
               <Field icon={Lock} label="Mot de passe">
-                <input type="password" value={patient.motDePasse}
-                  onChange={e => updP("motDePasse", e.target.value)}
-                  placeholder="Minimum 8 caractères" className="w-full bg-transparent outline-none" />
+                <div className="flex w-full items-center gap-2 rounded-xl bg-card px-1 py-1">
+                  <input
+                    type={voirMdpPatient ? "text" : "password"}
+                    value={patient.motDePasse}
+                    onChange={e => updP("motDePasse", e.target.value)}
+                    placeholder="Minimum 8 caractères"
+                    className="flex-1 bg-transparent outline-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setVoirMdpPatient(v => !v)}
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    {voirMdpPatient ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                  </button>
+                </div>
               </Field>
               <Consent checked={patient.consentement} onChange={v => updP("consentement", v)}
                 label={<>J'accepte que SmartSanté Cameroun traite mes données de santé conformément à la{" "}
@@ -245,9 +260,22 @@ function SignupPage() {
                   placeholder="dr.nguemo@hopital.cm" className="w-full bg-transparent outline-none" />
               </Field>
               <Field icon={Lock} label="Mot de passe">
-                <input type="password" value={medecin.motDePasse}
-                  onChange={e => updM("motDePasse", e.target.value)}
-                  placeholder="Minimum 8 caractères" className="w-full bg-transparent outline-none" />
+                <div className="flex w-full items-center gap-2 rounded-xl bg-card px-1 py-1">
+                  <input
+                    type={voirMdpMedecin ? "text" : "password"}
+                    value={medecin.motDePasse}
+                    onChange={e => updM("motDePasse", e.target.value)}
+                    placeholder="Minimum 8 caractères"
+                    className="flex-1 bg-transparent outline-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setVoirMdpMedecin(v => !v)}
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    {voirMdpMedecin ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                  </button>
+                </div>
               </Field>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <Field icon={Briefcase} label="Spécialité">
