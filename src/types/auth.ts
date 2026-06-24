@@ -55,8 +55,8 @@ export interface FormulaireMedecin {
 // ─────────────────────────────────────────────────────────────
 
 export interface FormulaireConnexionPatient {
-  nom: string
   telephone: string
+  motDePasse: string
 }
 
 export interface FormulaireConnexionMedecin {
@@ -80,14 +80,14 @@ export interface ReponseInscription {
 
 // Réponse succès connexion médecin/admin
 export interface ReponseConnexion {
-  message: string
+  message: 'Connexion réussie.'
   token: string
   utilisateur: Utilisateur
 }
 
 // Réponse vérification OTP réussie
 export interface ReponseOTP {
-  message: string
+  message: 'Compte vérifié avec succès.'
   token: string
   utilisateur: Utilisateur
 }

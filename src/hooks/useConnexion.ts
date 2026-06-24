@@ -30,11 +30,12 @@ export function useConnexion() {
 
     // Backend a généré l'OTP → redirige vers verification
     if (reponse.message === 'OTP_SENT') {
+      const otpReponse = reponse as { message: 'OTP_SENT'; telephone: string; nom: string }
       sessionStorage.setItem(
         'smartsante.otp',
         JSON.stringify({
-          telephone: reponse.telephone,
-          nom:       reponse.nom,
+          telephone: otpReponse.telephone,
+          nom:       otpReponse.nom,
           nouveauCompte: false,
         })
       )

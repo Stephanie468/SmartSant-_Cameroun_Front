@@ -16,8 +16,8 @@ function LoginPage() {
 
   // ── État formulaire patient ───────────────────────────────
   const [patient, setPatient] = useState<FormulaireConnexionPatient>({
-    nom: "",
     telephone: "",
+    motDePasse: "",
   })
 
   // ── État formulaire médecin ───────────────────────────────
@@ -35,11 +35,11 @@ function LoginPage() {
   const handlePatient = (e: React.FormEvent) => {
     e.preventDefault()
     const tel = patient.telephone.replace(/\s+/g, "")
-    if (patient.nom.trim().length < 2)
-      return setErreur("Veuillez renseigner votre nom complet.")
     if (!/^\+?\d{8,15}$/.test(tel))
       return setErreur("Numéro invalide. Format : +237 6XX XXX XXX")
-    connecterPatient({ ...patient, telephone: tel })
+    if (patient.motDePasse.length < 8)
+      return setErreur("Mot de passe trop court (8 caractères minimum).")
+    connecterPatient({ telephone: tel, motDePasse: patient.motDePasse })
   }
 
   // ── Soumission médecin ────────────────────────────────────
@@ -148,15 +148,6 @@ function LoginPage() {
             {/* ── Formulaire Patient ── */}
             {tab === "patient" ? (
               <form onSubmit={handlePatient} className="mt-6 space-y-4">
-                <Field icon={User} label="Nom complet">
-                  <input
-                    value={patient.nom}
-                    onChange={e => setPatient(f => ({ ...f, nom: e.target.value }))}
-                    placeholder="Jean-Paul Ekanga"
-                    disabled={chargement}
-                    className="w-full bg-transparent outline-none disabled:opacity-50"
-                  />
-                </Field>
                 <Field icon={Phone} label="Numéro WhatsApp">
                   <input
                     type="tel"
@@ -167,8 +158,18 @@ function LoginPage() {
                     className="w-full bg-transparent outline-none disabled:opacity-50"
                   />
                 </Field>
+                <Field icon={Lock} label="Mot de passe">
+                  <input
+                    type="password"
+                    value={patient.motDePasse}
+                    onChange={e => setPatient(f => ({ ...f, motDePasse: e.target.value }))}
+                    placeholder="••••••••"
+                    disabled={chargement}
+                    className="w-full bg-transparent outline-none disabled:opacity-50"
+                  />
+                </Field>
                 <p className="text-xs text-muted-foreground">
-                  Un code de vérification à 6 chiffres vous sera envoyé via WhatsApp.
+                  Entrez votre numéro WhatsApp et votre mot de passe pour accéder à votre compte.
                 </p>
                 {erreur && <ErrorMsg>{erreur}</ErrorMsg>}
                 <button
