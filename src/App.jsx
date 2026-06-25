@@ -16,7 +16,9 @@ import Medecin from "./pages/medecin"
 import MedecinPatients from "./pages/medecin.patients"
 import MedecinPlanning from "./pages/medecin.planning"
 import MedecinTeleconsultation from "./pages/medecin.teleconsultation"
-import AttenteValidation from "./pages/AttenteValidation" 
+import AttenteValidation from "./pages/AttenteValidation"
+import Profil from "./pages/profil"
+import MotDePasseOublie from "./pages/mot-de-passe-oublie"
 // Pages admin
 import Statistiques from "./pages/statistiques"
 
@@ -41,6 +43,8 @@ function App() {
         <Route path="/medecin/planning" element={<MedecinPlanning />} />
         <Route path="/medecin/teleconsultation" element={<MedecinTeleconsultation />} />
         <Route path="/attente-validation" element={<AttenteValidation />} />
+        <Route path="/profil" element={<Profil />} />
+        <Route path="/mot-de-passe-oublie" element={<MotDePasseOublie />} />
 
         <Route path="/statistiques" element={<Statistiques />} />
         

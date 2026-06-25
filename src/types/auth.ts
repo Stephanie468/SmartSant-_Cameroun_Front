@@ -115,7 +115,83 @@ export interface ReponseCompteSuspendu {
   message: 'COMPTE_SUSPENDU'
   details: string
 }
+// ── Formulaires mot de passe oublié ──────────────────────────
+export interface FormulaireOubliPatient {
+  telephone: string
+}
 
+export interface FormulaireOubliMedecin {
+  email: string
+}
+
+export interface FormulaireNouveauMotDePasse {
+  tokenReset: string
+  nouveauMotDePasse: string
+  confirmerMotDePasse: string
+}
+
+export interface FormulaireModifierMotDePasse {
+  ancienMotDePasse: string
+  nouveauMotDePasse: string
+  confirmerMotDePasse: string
+}
+
+// ── Réponses ──────────────────────────────────────────────────
+export interface ReponseCodeEnvoye {
+  message: 'CODE_ENVOYE'
+  telephone?: string
+  email?: string
+}
+
+export interface ReponseCodeValide {
+  message: 'CODE_VALIDE'
+  tokenReset: string
+}
+
+export interface ReponseResetSuccess {
+  message: string
+  token: string
+  utilisateur: Utilisateur
+}
+
+export interface ProfilComplet {
+  id: string
+  nom: string
+  prenom: string
+  email?: string | null
+  telephone: string
+  role: Role
+  statut: StatutCompte
+  dateCreation: string
+  patient?: {
+    ville?: string | null
+    region?: string | null
+    groupeSanguin?: string | null
+    antecedents?: string | null
+    allergies?: string | null
+    langue?: string
+  } | null
+  medecin?: {
+    specialite: string
+    numeroOrdre: string
+    tarifConsultation: number
+    statutCertification: string
+    bio?: string | null
+    carteProfessionnelleUrl?: string | null
+  } | null
+}
+
+// Types ApiResponse
+export type ApiCodeEnvoye   = ApiResponse<ReponseCodeEnvoye>
+export type ApiCodeValide   = ApiResponse<ReponseCodeValide>
+export type ApiResetSuccess = ApiResponse<ReponseResetSuccess>
+export type ApiProfil       = ApiResponse<ProfilComplet>
+
+// ── Routes supplémentaires dans authApi ───────────────────────
+// Ajoute dans le const authApi existant :
+/*
+  
+*/
 // Union de toutes les réponses possibles de /auth/connexion
 export type ReponseConnexionBrute =
   | ReponseOTPEnvoye
@@ -186,9 +262,26 @@ export const authApi = {
     client.post(ROUTES.renvoyerOTP, { telephone }),
 
   // ── Authentifié ────────────────────────────────────────────
-  getProfil: (): Promise<ApiUtilisateur> =>
+  getProfil: (): Promise<ApiProfil> =>
     client.authGet(ROUTES.profil),
 
   deconnexion: (): Promise<ApiMessage> =>
     client.authPost(ROUTES.deconnexion, {}),
+
+  oubliPatient: (data: FormulaireOubliPatient): Promise<ApiCodeEnvoye> =>
+    client.post('/auth/mot-de-passe-oublie/patient', data),
+
+  oubliMedecin: (data: FormulaireOubliMedecin): Promise<ApiCodeEnvoye> =>
+    client.post('/auth/mot-de-passe-oublie/medecin', data),
+
+  verifierCodeReset: (data: { telephone?: string; email?: string; code: string }): Promise<ApiCodeValide> =>
+    client.post('/auth/mot-de-passe-oublie/verifier', data),
+
+  reinitialiserMotDePasse: (data: { tokenReset: string; nouveauMotDePasse: string }): Promise<ApiResetSuccess> =>
+    client.post('/auth/mot-de-passe-oublie/reset', data),
+
+  modifierMotDePasse: (data: { ancienMotDePasse: string; nouveauMotDePasse: string }): Promise<ApiMessage> =>
+    client.authPut('/auth/mot-de-passe', data),
+
 }
+

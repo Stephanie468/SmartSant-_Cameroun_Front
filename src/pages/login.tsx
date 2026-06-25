@@ -194,6 +194,11 @@ function LoginPage() {
                   }
                 </button>
                 <p className="text-center text-sm text-muted-foreground">
+                  <Link to="/mot-de-passe-oublie?type=patient" className="font-semibold text-primary hover:underline">
+                    Mot de passe oublié ?
+                  </Link>
+                </p>
+                <p className="text-center text-sm text-muted-foreground">
                   Première visite ?{" "}
                   <Link to="/inscription" className="font-semibold text-primary hover:underline">
                     Créer un compte
@@ -250,6 +255,11 @@ function LoginPage() {
                     : <><ArrowRight className="size-4" /> Accéder au dashboard</>
                   }
                 </button>
+                <p className="text-center text-sm text-muted-foreground">
+                  <Link to="/mot-de-passe-oublie?type=medecin" className="font-semibold text-primary hover:underline">
+                    Mot de passe oublié ?
+                  </Link>
+                </p>
                 <p className="text-center text-sm text-muted-foreground">
                   Pas encore partenaire ?{" "}
                   <Link to="/inscription" className="font-semibold text-primary hover:underline">
