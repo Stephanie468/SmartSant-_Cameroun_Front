@@ -21,6 +21,10 @@ import Profil from "./pages/profil"
 import MotDePasseOublie from "./pages/mot-de-passe-oublie"
 // Pages admin
 import Statistiques from "./pages/statistiques"
+import AdminMedecins from "./pages/admin.medecins"
+import AdminStructures from "./pages/admin.structures"
+import AdminPathologies from "./pages/admin.pathologies"
+import AdminAlertes from "./pages/admin.alertes"
 
 function App() {
   return (
@@ -47,7 +51,10 @@ function App() {
         <Route path="/mot-de-passe-oublie" element={<MotDePasseOublie />} />
 
         <Route path="/statistiques" element={<Statistiques />} />
-        
+        <Route path="/admin/medecins" element={<AdminMedecins />} />
+        <Route path="/admin/structures" element={<AdminStructures />} />
+        <Route path="/admin/pathologies" element={<AdminPathologies />} />
+        <Route path="/admin/alertes" element={<AdminAlertes />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

@@ -5,6 +5,7 @@ export { client } from './client'
 // Les APIs viennent maintenant directement des types
 export { authApi } from '../types/auth.js'
 export { patientApi } from '../types/patient.js'
+export { adminApi } from '../types/admin.js'
 
 // Tu ajouteras au fur et à mesure :
 // export { medecinApi }      from '../types/medecin.js'

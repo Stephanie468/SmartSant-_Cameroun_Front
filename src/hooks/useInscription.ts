@@ -31,7 +31,7 @@ export function useInscription() {
       setErreur(err)
       return
     }
-
+    
     // Sauvegarde les infos pour la page /verification
     sessionStorage.setItem(
       'smartsante.otp',

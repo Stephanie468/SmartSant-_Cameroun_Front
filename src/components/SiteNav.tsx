@@ -33,6 +33,14 @@ const medecinLinks: LinkItem[] = [
   { to: "/statistiques", label: "Épidémiologie", icon: LineChart },
 ];
 
+const adminLinks: LinkItem[] = [
+  { to: "/statistiques", label: "Tableau de bord", icon: LayoutDashboard },
+  { to: "/admin/medecins", label: "Médecins", icon: Users },
+  { to: "/admin/structures", label: "Structures sanitaires", icon: MapPin },
+  { to: "/admin/pathologies", label: "Pathologies", icon: ClipboardList },
+  { to: "/admin/alertes", label: "Alertes épidémio.", icon: LineChart },
+];
+
 function Brand() {
   return (
     <NavLink to="/" className="flex items-center gap-2.5">
@@ -52,7 +60,7 @@ function SidebarNav({
   onNavigate,
 }: {
   links: LinkItem[];
-  variant: "patient" | "medecin";
+  variant: "patient" | "medecin" | "admin";
   onNavigate?: () => void;
 }) {
   return (
@@ -60,7 +68,7 @@ function SidebarNav({
       <div className="border-b border-border px-5 py-5">
         <Brand />
         <p className="mt-3 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
-          Espace {variant === "patient" ? "patient" : "médecin"}
+          Espace {variant === "patient" ? "patient" : variant === "medecin" ? "médecin" : "administrateur"}
         </p>
       </div>
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-5">
@@ -95,7 +103,7 @@ function SidebarNav({
   );
 }
 
-export function SiteNav({ variant = "patient" }: { variant?: "patient" | "medecin" | "public" }) {
+export function SiteNav({ variant = "patient" }: { variant?: "patient" | "medecin" | "admin" | "public" }) {
   const [open, setOpen] = useState(false);
 
   if (variant === "public") {
@@ -122,7 +130,7 @@ export function SiteNav({ variant = "patient" }: { variant?: "patient" | "medeci
     );
   }
 
-  const links = variant === "medecin" ? medecinLinks : patientLinks;
+  const links = variant === "medecin" ? medecinLinks : variant === "admin" ? adminLinks : patientLinks;
 
   return (
     <>
