@@ -29,9 +29,22 @@ export interface ConsultationPathologie {
   pathologie: Pathologie
 }
 
+export interface ConsultationPatient {
+  id: string
+  ville?: string | null
+  allergies?: string | null
+  utilisateur: {
+    id?: string
+    nom: string
+    prenom: string
+    telephone: string
+  }
+}
+
 export interface ConsultationIA {
   id: string
   patientId: string
+  patient: ConsultationPatient
   conversationId?: string | null
   symptomes: string
   preDiagnostic: string
@@ -89,6 +102,14 @@ export interface MedecinInfo {
 export interface RendezVous {
   id: string
   patientId: string
+  patient: {
+    id: string
+    utilisateur: {
+      nom: string
+      prenom: string
+      telephone: string
+    }
+  }
   medecinId: string
   creneauId?: string | null
   dateHeure: string

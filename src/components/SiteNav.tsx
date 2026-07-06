@@ -30,7 +30,6 @@ const medecinLinks: LinkItem[] = [
   { to: "/medecin/patients", label: "Fiches patients", icon: Users },
   { to: "/medecin/planning", label: "Planning", icon: CalendarRange },
   { to: "/medecin/teleconsultation", label: "Téléconsultation", icon: Video },
-  { to: "/statistiques", label: "Épidémiologie", icon: LineChart },
 ];
 
 const adminLinks: LinkItem[] = [

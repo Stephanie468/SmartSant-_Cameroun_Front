@@ -39,9 +39,9 @@ export function useConnexion() {
           nouveauCompte: false,
         })
       )
-      
+      navigate('/verification')
     }
-    navigate('/patient')
+    
   }
 
   // ── Connexion Médecin ────────────────────────────────────────
