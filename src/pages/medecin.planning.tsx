@@ -1,7 +1,7 @@
 import { Fragment, useState } from "react";
 import { SiteNav } from "@/components/SiteNav";
 import { PanelCard, SectionHeader } from "@/components/Card";
-import { Video, CalendarDays, Loader2, AlertTriangle, Plus } from "lucide-react";
+import { Video, CalendarDays, Loader2, AlertTriangle, Plus, Check, X, Inbox } from "lucide-react";
 import { useMedecinPlanning } from "../hooks/useMedecin";
 
 // Définition des heures de la journée affichées dans la grille
@@ -17,8 +17,20 @@ const dayLabels = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
  * Permet également de déclarer de nouveaux créneaux de consultation.
  */
 function PlanningPage() {
-  // Récupération des créneaux et des rendez-vous via le hook personnalisé
-  const { planning, chargement, erreur, ajouterCreneau, soumissionCreneau } = useMedecinPlanning();
+  // Récupération des créneaux, rendez-vous et demandes via le hook personnalisé
+  const {
+    planning,
+    demandes,
+    chargement,
+    demandesChargement,
+    demandeActionLoading,
+    erreur,
+    ajouterCreneau,
+    mettreAJourDemande,
+    rafraichirDemandes,
+    soumissionCreneau
+  } = useMedecinPlanning();
+  const [afficherDemandes, setAfficherDemandes] = useState(false);
 
   // États du formulaire d'ajout de créneau
   const [nouveauCreneau, setNouveauCreneau] = useState({
@@ -87,6 +99,89 @@ function PlanningPage() {
             <p className="text-sm text-destructive-foreground">{erreur}</p>
           </div>
         )}
+
+        {/* Bouton demandes de rendez-vous */}
+        <PanelCard className="mb-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h3 className="mb-2 text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                <Inbox className="size-4 text-primary" /> Demandes de rendez-vous
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {demandesChargement ? 'Chargement...' : `${demandes.length} demande${demandes.length > 1 ? 's' : ''} en attente`}
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setAfficherDemandes((prev) => !prev)
+                  if (!afficherDemandes) rafraichirDemandes()
+                }}
+                className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-card hover:opacity-90"
+              >
+                Voir les demandes
+              </button>
+            </div>
+          </div>
+
+          {afficherDemandes && (
+            <div className="mt-6 space-y-4">
+              {demandesChargement ? (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Loader2 className="size-4 animate-spin" /> Chargement des demandes...
+                </div>
+              ) : demandes.length === 0 ? (
+                <div className="rounded-2xl border border-border bg-surface p-4 text-sm text-muted-foreground">
+                  Aucune nouvelle demande de rendez-vous pour le moment.
+                </div>
+              ) : (
+                demandes.map((demande) => {
+                  const date = new Date(demande.dateHeure)
+                  const jour = date.toLocaleDateString('fr-FR', {
+                    weekday: 'long',
+                    day: '2-digit',
+                    month: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })
+
+                  return (
+                    <div key={demande.id} className="rounded-3xl border border-border bg-card p-4 shadow-sm">
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">
+                            {demande.patient.utilisateur.prenom} {demande.patient.utilisateur.nom}
+                          </p>
+                          <p className="text-xs text-muted-foreground">{jour}</p>
+                          <p className="text-xs text-muted-foreground mt-2">Motif : {demande.motif || 'Pas de motif renseigné'}</p>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          <button
+                            type="button"
+                            onClick={() => mettreAJourDemande(demande.id, 'CONFIRME')}
+                            disabled={demandeActionLoading}
+                            className="inline-flex items-center gap-2 rounded-full bg-success px-4 py-2 text-xs font-semibold text-success-foreground hover:opacity-90 disabled:opacity-50"
+                          >
+                            <Check className="size-3" /> Confirmer
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => mettreAJourDemande(demande.id, 'ANNULE')}
+                            disabled={demandeActionLoading}
+                            className="inline-flex items-center gap-2 rounded-full bg-destructive px-4 py-2 text-xs font-semibold text-destructive-foreground hover:opacity-90 disabled:opacity-50"
+                          >
+                            <X className="size-3" /> Refuser
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })
+              )}
+            </div>
+          )}
+        </PanelCard>
 
         {/* Section rapide d'ajout de disponibilité */}
         <PanelCard className="mb-8">

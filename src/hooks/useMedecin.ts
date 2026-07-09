@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { medecinApi } from '../types/medecin'
-import type { MedecinDashboardData, PlanningData } from '../types/medecin'
+import type { MedecinDashboardData, PlanningData, RendezVousDemande } from '../types/medecin'
 import type { ConsultationIA, Creneau } from '../types/patient'
 
 /**
@@ -105,7 +105,10 @@ export function useMedecinPrescription() {
  */
 export function useMedecinPlanning() {
   const [planning, setPlanning] = useState<PlanningData | null>(null)
+  const [demandes, setDemandes] = useState<RendezVousDemande[]>([])
   const [chargement, setChargement] = useState(true)
+  const [demandesChargement, setDemandesChargement] = useState(true)
+  const [demandeActionLoading, setDemandeActionLoading] = useState(false)
   const [erreur, setErreur] = useState('')
   const [soumissionCreneau, setSoumissionCreneau] = useState(false)
 
@@ -123,6 +126,46 @@ export function useMedecinPlanning() {
       setErreur('Impossible de charger le planning.')
     } finally {
       setChargement(false)
+    }
+  }
+
+  async function chargerDemandes() {
+    setDemandesChargement(true)
+    setErreur('')
+    try {
+      const res = await medecinApi.getDemandesRendezVous()
+      if (res.erreur) {
+        setErreur(res.erreur)
+      } else if (res.data) {
+        setDemandes(res.data)
+      }
+    } catch (e) {
+      setErreur('Impossible de charger les demandes de rendez-vous.')
+    } finally {
+      setDemandesChargement(false)
+    }
+  }
+
+  async function mettreAJourDemande(
+    id: string,
+    statut: 'CONFIRME' | 'ANNULE'
+  ): Promise<boolean> {
+    setDemandeActionLoading(true)
+    setErreur('')
+    try {
+      const res = await medecinApi.mettreAJourDemandeRendezVous(id, { statut })
+      if (res.erreur) {
+        setErreur(res.erreur)
+        return false
+      }
+      await chargerPlanning()
+      await chargerDemandes()
+      return true
+    } catch (e) {
+      setErreur('Impossible de mettre à jour la demande de rendez-vous.')
+      return false
+    } finally {
+      setDemandeActionLoading(false)
     }
   }
 
@@ -151,7 +194,20 @@ export function useMedecinPlanning() {
 
   useEffect(() => {
     chargerPlanning()
+    chargerDemandes()
   }, [])
 
-  return { planning, chargement, erreur, ajouterCreneau, soumissionCreneau, rafraichir: chargerPlanning }
+  return {
+    planning,
+    demandes,
+    chargement,
+    demandesChargement,
+    demandeActionLoading,
+    erreur,
+    ajouterCreneau,
+    mettreAJourDemande,
+    soumissionCreneau,
+    rafraichir: chargerPlanning,
+    rafraichirDemandes: chargerDemandes
+  }
 }

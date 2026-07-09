@@ -23,6 +23,11 @@ export interface MedecinDashboardData {
   planningJour: RendezVous[]
 }
 
+export interface RendezVousDemande extends Omit<RendezVous, 'medecin'> {
+  patient: RendezVous['patient']
+  creneau?: Creneau | null
+}
+
 export interface PlanningData {
   creneaux: Creneau[]
   rendezVous: RendezVous[]
@@ -52,6 +57,17 @@ export const medecinApi = {
   // Charge le planning (créneaux et rendez-vous hebdomadaires)
   getPlanning: (): Promise<ApiResponse<PlanningData>> =>
     client.authGet('/medecin/planning'),
+
+  // Charge les demandes de rendez-vous en attente
+  getDemandesRendezVous: (): Promise<ApiResponse<RendezVousDemande[]>> =>
+    client.authGet('/medecin/planning/demandes'),
+
+  // Met à jour le statut d'une demande de rendez-vous
+  mettreAJourDemandeRendezVous: (
+    id: string,
+    data: { statut: 'CONFIRME' | 'ANNULE' }
+  ): Promise<ApiResponse<{ message: string; rendezVous: RendezVous }>> =>
+    client.authPut(`/medecin/planning/demandes/${id}`, data),
 
   // Ajoute un créneau de disponibilité
   creerCreneau: (data: {
