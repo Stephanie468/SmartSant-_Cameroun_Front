@@ -148,10 +148,9 @@ function RdvPage() {
                 const month = formattingDate[1]?.toUpperCase() || "";
                 
                 const formatTime = dateRdv.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' });
-                const isTeleconsult = !a.medecin.formationSanitaire;
-                const location = a.medecin.formationSanitaire?.nom 
+                const location = a.medecin.formationSanitaire?.nom
                   ? `${a.medecin.formationSanitaire.nom}, ${a.medecin.formationSanitaire.ville}`
-                  : "Téléconsultation vidéo";
+                  : "Lieu de rendez-vous présentiel";
 
                 return (
                   <PanelCard key={a.id} className="flex flex-col gap-5 md:flex-row md:items-center">
@@ -182,11 +181,7 @@ function RdvPage() {
                           <Clock className="size-4 text-primary" /> {formatTime}
                         </span>
                         <span className="inline-flex items-center gap-1.5">
-                          {isTeleconsult ? (
-                            <Video className="size-4 text-secondary" />
-                          ) : (
-                            <MapPin className="size-4 text-primary" />
-                          )}
+                          <MapPin className="size-4 text-primary" />
                           {location}
                         </span>
                       </div>
@@ -199,15 +194,9 @@ function RdvPage() {
                         </span>
                       )}
                       {a.statut === 'CONFIRME' && (
-                        <button
-                          className={`rounded-xl px-4 py-2 text-sm font-semibold shadow-card ${
-                            isTeleconsult
-                              ? "bg-secondary text-secondary-foreground"
-                              : "bg-primary text-primary-foreground"
-                          }`}
-                        >
-                          {isTeleconsult ? "Rejoindre l'appel" : "Itinéraire"}
-                        </button>
+                        <span className="text-xs text-success font-semibold border border-success/20 bg-success/5 rounded-xl px-4 py-2">
+                          Rendez-vous confirmé
+                        </span>
                       )}
                     </div>
                   </PanelCard>
